@@ -1,21 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
 
 
-@app.post("/hello/")
-async def create_item(product, id ):
-    return {"message": product, "id": id}
+templates = Jinja2Templates(directory="templates")
 
-@app.put("/product/{id}")
-async def update_item(product, id):
-    return {"message": product, "id": id}
 
-@app.delete("/del/{id}")
-async def delete_item(product, id):
-    return {"message": product, "id": id}
+@app.get("/items/{id}", response_class=HTMLResponse)
+async def read_item(request: Request, id: str):
+    return templates.TemplateResponse(
+        request=request, name="item.html", context={"id": id}
+    )
