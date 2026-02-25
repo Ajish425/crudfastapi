@@ -1,9 +1,19 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Item Details</title>
 
 </head>
 <body>
-    <h1><a href="{{ url_for('read_item', id=id) }}">Item ID: {{ id }}</a></h1>
+   <form action="/submit" method="POST">
+         <h3>Enter User name</h3>
+         <p><input type='text' name='nm'/></p>
+         <p><input type='submit'/></p>
+
+      </form>
+
+
+       <h1>{{name}}</h1>
+
+
 </body>
 </html>
