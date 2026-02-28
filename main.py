@@ -5,7 +5,7 @@ from typing import Annotated
 
 app = FastAPI()
 
-class zepto(SQLModel, table=True):
+class Zepto(SQLModel, table=True):
     #id: int | None = Field(default=None, primary_key=True)
     category: str = Field(index=True, primary_key=True)
     name: str = Field(index=True)
@@ -27,12 +27,31 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
+@app.post("/zepto/add")
+async def add_zepto(zepto: Zepto,session: SessionDep) -> Zepto:
+    session.add(zepto)
+    session.commit()
+    session.refresh(zepto)
+    return zepto
+
+
 @app.get("/zepto/{category}")
 async def get_zepto(category: str, session: SessionDep):
-    z = session.get(zepto,category)
+    z = session.get(Zepto,category)
     if not z:
-        raise HTTPException(status_code=404, detail="Hero not found")
+        raise HTTPException(status_code=404, detail="zepto not found")
     return z
+
+@app.delete("/zepto/delete/{category}")
+async def delete_zepto(session: SessionDep, category:str):
+    zepto = session.get(Zepto, category)
+    session.delete(zepto)
+    session.commit()
+    return zepto
+
+
+
+
 
 
 
